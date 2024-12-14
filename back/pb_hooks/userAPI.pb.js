@@ -1,4 +1,4 @@
-routerAdd("GET", "/api/collections/Worker/login/:login/:password", (c) => {
+routerAdd("GET", "/api/collections/users/login/:login/:password", (c) => {
     
     let login = c.pathParam("login");
     let password = c.pathParam("password");
@@ -6,7 +6,7 @@ routerAdd("GET", "/api/collections/Worker/login/:login/:password", (c) => {
 
     try {
     user = $app.dao().findFirstRecordByData(
-        "Worker", "login", login
+        "users", "login", login
     )
     } catch (exception) {
         console.log(exception.message)
@@ -19,14 +19,14 @@ routerAdd("GET", "/api/collections/Worker/login/:login/:password", (c) => {
     return c.json(200, { user })
 })
 
-routerAdd("GET", "/api/collections/Worker/findByLogin/:login", (c) => {
+routerAdd("GET", "/api/collections/users/findByLogin/:login", (c) => {
     
     let login = c.pathParam("login");
     let user = null;
 
     try {
     user = $app.dao().findFirstRecordByData(
-        "Worker", "login", login
+        "users", "login", login
     )
     } catch (exception) {
         console.log(exception.message)

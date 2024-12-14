@@ -1,0 +1,92 @@
+.contract-info-container{
+    width: 31vw;
+    min-width: 350px;
+    height: fit-content;
+    margin: 10px;
+    justify-content: center;
+}
+.contract-info-container .contract-info-box{
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0px 9px 30px -10px rgb(0 0 0);
+}
+.contract-info-box .contract-info-h3{
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    position: relative;
+}
+.contract-info-box .contract-info-h3 .contract-info-span{
+    position: absolute;
+    width: 80px;
+    height: 6px;
+    bottom: 0px;
+    border-radius: 200px;
+    transition: all 0.3s cubic-bezier(0.445 , 2.05 , 0.855 , 0.95);
+    transition-delay: 0.5s;
+}
+.contract-info-box .contract-info-form .contract-info-input_box{
+    text-align: center;
+    border: 2px solid #000;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    position: relative;
+}
+.contract-info-box .contract-info-form .contract-info-input_box .contract-info-input{
+    width: 95%;
+    font-size: 28px;
+    padding: 10px 0px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+.contract-info-box .contract-info-form .contract-info-input_box .contract-info-label{
+    position: absolute;
+    left: 8px;
+    top: -12px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0px 10px;
+    pointer-events: none;
+    transition: 0.3s;
+    background-color: white;
+}
+.contract-info-box .contract-info-form .contract-info-input_box .contract-info-input:focus + .contract-info-label,
+.contract-info-box .contract-info-form .contract-info-input_box .contract-info-input:valid + .contract-info-label{
+    top: -16px;
+    color: burlywood;
+    transition: all 0.5s cubic-bezier(0.60 , 4.00 , 0.255 , 1.55);
+}
+.contract-info-box .contract-info-form{
+    width: 100%;
+    font-size: 30px;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 20px;
+    border-radius: 200px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.contract-info-box .contract-info-form,
+.contract-info-box .contract-info-form,
+.contract-info-box .contract-info-form{
+    font-size: 22px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #D48166;
+}
+.contract-info-box .contract-info-form,
+.contract-info-box .contract-info-form,
+.contract-info-box .contract-info-form{
+    font-size: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+.contract-info-box .contract-info-form,
+.contract-info-box .contract-info-form,
+.contract-info-box .contract-info-form{
+    text-decoration: underline;
+}

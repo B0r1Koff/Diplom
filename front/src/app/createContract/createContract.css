@@ -1,0 +1,158 @@
+.contract-page{
+    width: 100vw;
+    height: 90vh;
+    margin-top: 10vh;
+}
+
+.contract-content, .contract-data{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contract-info-wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.contract-data{
+    min-width: 300px;
+    width: 40vw;
+    height: 80vh;
+}
+/* 
+.create-contract-button{
+    width: 120px;
+    height: 30px;
+    background-color:bisque;
+    border-radius: 7px;
+    font-size: medium;
+    border: 2px solid black;
+    margin: 10px;
+}
+
+.create-contract-button:hover{
+    background-color: burlywood;
+    color: black;
+} */
+
+.create-contract-button{
+    width: 150px;
+    font-size: 20px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 200px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(45deg , #E5B9A8 , #D48166);
+    box-shadow: 0px 10px 30px -5px #f79168;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+.create-contract-button:hover{
+    box-shadow: 0px 5px 10px -5px #ff9266;
+}
+.create-contract-button:active{
+    transform: scale3d(0.9 , 0.9 , 0.9);
+}
+
+
+/*  */
+
+.worker-info-container{
+    width: 31vw;
+    min-width: 350px;
+    height: fit-content;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid white;
+}
+.worker-info-container .worker-info-box{
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0px 9px 30px -10px rgb(0 0 0);
+}
+.worker-info-box .worker-info-h3{
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    position: relative;
+}
+.worker-info-box .worker-info-h3 .worker-info-span{
+    position: absolute;
+    width: 80px;
+    height: 6px;
+    bottom: 0px;
+    border-radius: 200px;
+    transition: all 0.3s cubic-bezier(0.445 , 2.05 , 0.855 , 0.95);
+    transition-delay: 0.5s;
+}
+.worker-info-box .worker-info-form .worker-info-input_box{
+    text-align: center;
+    border: 2px solid #000;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    position: relative;
+}
+.worker-info-box .worker-info-form .worker-info-input_box .worker-info-input{
+    width: 95%;
+    font-size: 28px;
+    padding: 10px 0px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+.worker-info-box .worker-info-form .worker-info-input_box .worker-info-label{
+    position: absolute;
+    left: 8px;
+    top: -12px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0px 10px;
+    pointer-events: none;
+    transition: 0.3s;
+    background-color: white;
+}
+.worker-info-box .worker-info-form .worker-info-input_box .worker-info-input:focus + .worker-info-label,
+.worker-info-box .worker-info-form .worker-info-input_box .worker-info-input:valid + .worker-info-label{
+    top: -16px;
+    color: burlywood;
+    transition: all 0.5s cubic-bezier(0.60 , 4.00 , 0.255 , 1.55);
+}
+.worker-info-box .worker-info-form{
+    width: 100%;
+    font-size: 30px;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 20px;
+    border-radius: 200px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.worker-info-box .worker-info-form,
+.worker-info-box .worker-info-form,
+.worker-info-box .worker-info-form{
+    font-size: 22px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #D48166;
+}
+.worker-info-box .worker-info-form,
+.worker-info-box .worker-info-form,
+.worker-info-box .worker-info-form{
+    font-size: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+.worker-info-box .worker-info-form,
+.worker-info-box .worker-info-form,
+.worker-info-box .worker-info-form{
+    text-decoration: underline;
+}

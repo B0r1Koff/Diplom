@@ -5,7 +5,7 @@ routerAdd("GET", "/api/collections/MonthData/findByUserId/:id", (c) => {
 
     try {
         data = $app.dao().findRecordsByExpr("MonthData",
-        $dbx.exp("LOWER(worker_id) = {:id}", { "id": id })    
+        $dbx.exp("LOWER(user_id) = {:id}", { "id": id })    
     )
     } catch (exception) {
         console.log(exception.message)

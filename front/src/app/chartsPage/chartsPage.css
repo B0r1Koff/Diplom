@@ -1,0 +1,55 @@
+.charts-page{
+    height: 85vh;
+    margin-top: 15vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.charts-params{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.charts-container{
+    display: flex;
+    justify-content: center;
+}
+
+.type-options{
+    text-align: center;
+    border: 2px solid #000;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    position: relative;
+    width: 180px;
+    height: 60px;
+    margin-right: 2.5vw;
+    margin-left: 2.5vw;
+}
+.type-options .select-type{
+    width: 95%;
+    font-size: 28px;
+    padding: 10px 0px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+.type-options .select-type-label{
+    position: absolute;
+    left: 8px;
+    top: -12px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0px 10px;
+    pointer-events: none;
+    transition: 0.3s;
+    background-color: white;
+}
+.type-options .select-type:focus + .select-type-label,
+.type-options .select-type:valid + .select-type-label{
+    top: -16px;
+    color: burlywood;
+    transition: all 0.5s cubic-bezier(0.60 , 4.00 , 0.255 , 1.55);
+}
