@@ -1,35 +1,51 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Auth from './/app/authorization/page'
-import Registration from './app/registration/page'
-import Home from './app/page'
-import Main from './app/main/page'
-import ContractsPage from './app/contracts/page'
-import CreateContract from './app/createContract/page'
-import AbsenceNotice from './app/absenceNotice/page'
+import Auth from './app/authorization/Authorization'
+import Registration from './app/registration/Registration'
+import Home from './app/StartPage'
+import Main from './app/main/Payrols'
+import ContractsPage from './app/contracts/Contracts'
+import CreateContract from './app/createContract/NewContract'
+import AbsenceNotice from './app/absenceNotice/Notices'
 import TaskPage from './app/pages/tasks/tasks'
 import Navbar from './app/2components/navbar/navbar'
+import { createTheme, MantineProvider } from '@mantine/core';
 
 function App() {
-  return (
-    <>
-    {
-      location.pathname !== "/" &&
-      <Navbar/>
+  const myColor = [
+    '#fff0e4',
+    '#ffe0cf',
+    '#fac0a1',
+    '#f69e6e',
+    '#f28043',
+    '#f06e27',
+    '#f06418',
+    '#d6530c',
+    '#bf4906',
+    '#a73c00'
+  ];
+  
+  const theme = createTheme({
+    colors: {
+      myColor,
     }
+  });
+
+  return (
+    <MantineProvider theme={theme}>
       <Routes>
         <Route path='/' element={<Home/>}/>
-        <Route path='/registration' element={<Registration/>}/>
-        <Route path='/main' element={<Main/>}/>
-        <Route path='/contracts' element={<ContractsPage/>}/>
-        <Route path='/createContract' element={<CreateContract/>}/>
-        <Route path='/absenceNotice' element={<AbsenceNotice/>}/>
-        <Route path='/tasks' element={<TaskPage/>}/>
+        <Route path='/registration' element={<><Navbar/><Registration/></>}/>
+        <Route path='/main' element={<><Navbar/><Main/></>}/>
+        <Route path='/contracts' element={<><Navbar/><ContractsPage/></>}/>
+        <Route path='/createContract' element={<><Navbar/><CreateContract/></>}/>
+        <Route path='/absenceNotice' element={<><Navbar/><AbsenceNotice/></>}/>
+        <Route path='/tasks' element={<><Navbar/><TaskPage/></>}/>
       </Routes>
-    </>
+    </MantineProvider>
   )
 }
 

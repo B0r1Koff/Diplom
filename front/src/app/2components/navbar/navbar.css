@@ -1,47 +1,100 @@
-.navbar{
-    width: 100vw;
-    height: 10vh;
-    background-color: #D48166;
-    display: flex;
-    flex-direction: row;
-    top: 0vh;
-    position: absolute;
+.navbar {
+  width: 100vw;
+  height: fit-content;
+  /* background-color: #D48166; */
+  display: flex;
+  flex-direction: row;
+  top: 0vh;
+  position: absolute;
 }
 
-.nav-button{
-    width: 12vw;
-    height: 12vw;
-    max-width: 8vh;
-    max-height: 8vh;
-    background-color: #E6E2DD;
-    margin: 0.5vh 1vw 0.5vh 1vw;
-    border-radius: 100%;
-    border: none;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid black;
+.nav-button {
+  width: 12vw;
+  height: 12vw;
+  max-width: 8vh;
+  max-height: 8vh;
+  background-color: #e6e2dd;
+  margin: 0.5vh 1vw 0.5vh 1vw;
+  border-radius: 100%;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
 }
 
-.nav-start{
-    width: 90vw;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+.nav-start {
+  width: 90vw;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.nav-end{
-    width: 15vw;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content:end;
-    align-items: center;
+.nav-end {
+  width: 15vw;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
 }
 
-.nav-btn-img{
-    margin-top: 0.5vh;
-    width: 5vh;
-    height: 5vh;
+.nav-btn-img {
+  margin-top: 0.5vh;
+  width: 5vh;
+  height: 5vh;
 }
+
+.nav-button:hover {
+  cursor: pointer;
+}
+
+.ant-tabs-nav-wrap {
+  width: 100vw !important;
+  background-color: #d48166;
+  display: flex;
+}
+
+.ant-tabs-nav-list {
+  width: 100vw !important;
+  background-color: #d48166;
+  display: flex;
+}
+
+.ant-tabs-nav {
+  width: 100%;
+  background-color: #d48166;
+  display: flex;
+}
+
+.ant-tabs-tab-btn {
+  height: 100%;
+  width: 100% !important;
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  /* color: white !important; */
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  height: 100%;
+  width: 100% !important;
+  color: white !important;
+}
+
+.ant-tabs-nav .ant-tabs-tab {
+  height: 100% !important;
+  width: 100% !important;
+  color: inherit;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ant-tabs-nav .ant-tabs-tab:hover .ant-tabs-tab-btn {
+    color: white !important;
+  }

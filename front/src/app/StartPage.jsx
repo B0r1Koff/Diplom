@@ -1,5 +1,5 @@
 import "./page.module.css";
-import Auth from "./authorization/page";
+import Auth from "./authorization/Authorization";
 
 export default function Home() {
   return (

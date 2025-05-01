@@ -34,6 +34,7 @@
     border-radius: 5px;
     margin-bottom: 25px;
     position: relative;
+    width: 94%;
 }
 .notice-info-box .notice-info-form .notice-info-input_box .notice-info-input{
     width: 95%;

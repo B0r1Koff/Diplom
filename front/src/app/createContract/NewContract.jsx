@@ -165,7 +165,7 @@ export default function CreateContract(){
             <div className='contract-info-wrapper'>
               <UserInfo userData={userData} setUserData={setUserData}/>
               <ContractInfo contractData={contractData} setContractData={setContractData}/>
-              <Bonuses bonuses={bonuses} setBonuses={setBonuses}/>
+              {/* <Bonuses bonuses={bonuses} setBonuses={setBonuses}/> */}
             </div>
             {user.position === "director" && 
               <div className="worker-info-container">   

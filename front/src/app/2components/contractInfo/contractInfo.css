@@ -3,7 +3,9 @@
     min-width: 350px;
     height: fit-content;
     margin: 10px;
+    display: flex;
     justify-content: center;
+    border: 1px solid white;
 }
 .contract-info-container .contract-info-box{
     width: 100%;
@@ -32,6 +34,7 @@
     border-radius: 5px;
     margin-bottom: 25px;
     position: relative;
+    width: 94%;
 }
 .contract-info-box .contract-info-form .contract-info-input_box .contract-info-input{
     width: 95%;

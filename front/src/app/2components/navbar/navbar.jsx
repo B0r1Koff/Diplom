@@ -1,77 +1,183 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { Tabs } from "antd";
 import "./navbar.css";
-import Profile from '../profile/profile';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import Profile from "../profile/profile";
+import { useNavigate } from "react-router-dom";
+import Icon from "@mdi/react";
+import {
+  mdiHomeOutline,
+  mdiFileDocumentOutline,
+  mdiFilePlusOutline,
+  mdiCalendarRemoveOutline,
+  mdiClipboardCheckOutline,
+  mdiLogout,
+  mdiAccountCircleOutline,
+  mdiAccountCardOutline,
+} from "@mdi/js";
 
-export default function Navbar(){
-    const pathes = {"worker" : ["/main", "/tasks"], "head" : ["/main", "/createContract", "/absenceNotice", "/contracts", "/chartsPage", "/tasks"], "director" : ["/contracts", "/createContract", "/tasks"]}
-    const [loggedUser, setLoggedUser] = useState(JSON.parse(localStorage.getItem('loggedUser')))
-    const navigation = useNavigate();
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [isProfileClicked, setIsProfileClicked] = useState(false);
+const { TabPane } = Tabs;
 
-    useEffect(() => {
-        const pathesList = pathes[loggedUser.position]
-        if(!pathesList.includes(location.pathname)){
-            navigation("/")
-        }
-    }, [])
+export default function Navbar() {
+  const pathes = {
+    worker: ["/main", "/tasks"],
+    head: [
+      "/main",
+      "/createContract",
+      "/absenceNotice",
+      "/contracts",
+      "/chartsPage",
+      "/tasks",
+    ],
+    director: ["/contracts", "/createContract", "/tasks"],
+  };
+  const [loggedUser, setLoggedUser] = useState(
+    JSON.parse(localStorage.getItem("loggedUser"))
+  );
+  const navigation = useNavigate();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-    const toggleProfile = () => {
-        setIsProfileOpen(!isProfileOpen);
-        setIsProfileClicked(!isProfileClicked)
-    };
+  useEffect(() => {
+    const pathesList = pathes[loggedUser.position];
+    if (!pathesList.includes(location.pathname)) {
+      navigation("/");
+    }
+  }, [loggedUser.position, navigation]);
 
-    return ( 
-        loggedUser.position === "director" ?
+  const handleTabClick = (key) => {
+    if (key === "logout") {
+      navigation("/");
+    } else if (key === "profile") {
+      setIsProfileOpen(true);
+    } else {
+      navigation(key);
+    }
+  };
 
-        <div className="navbar">
-            <div className='nav-start'>
-                <button onClick={toggleProfile} disabled={isProfileClicked} className='nav-button'><img className='nav-btn-img' src="https://cdn.onlinewebfonts.com/svg/img_217837.png" alt="fewre" /></button>
-                <Profile isOpen={isProfileOpen} onClose={toggleProfile}/>
-
-                <button className='nav-button' onClick={e => navigation("/contracts")}><img className='nav-btn-img' src="https://cdn.onlinewebfonts.com/svg/img_50288.png" alt="" /></button>
-                <button className='nav-button' onClick={e => navigation("/createContract")}><img className='nav-btn-img' src="https://cdn.icon-icons.com/icons2/2946/PNG/512/paper_plus_icon_184281.png" alt="" /></button>
-            </div>
-                
-            <div className='nav-end'>
-                <button className='nav-button' onClick={e => navigation("/")}><img className='nav-btn-img' src="https://cdn3.iconfinder.com/data/icons/minimalisticons/28/Close-1024.png" alt="" /></button>
-            </div>
-        </div>
-
-        : loggedUser.position === "head" ? 
-
-        <div className="navbar">
-            <div className='nav-start'>
-                <button onClick={toggleProfile} disabled={isProfileClicked} className='nav-button'><img className='nav-btn-img' src="https://cdn.onlinewebfonts.com/svg/img_217837.png" alt="fewre" /></button>
-                <Profile isOpen={isProfileOpen} onClose={toggleProfile}/>
-
-                <button className='nav-button' onClick={e => navigation("/main")}><img className='nav-btn-img' src="https://cdn4.iconfinder.com/data/icons/48-bubbles/48/12.File-1024.png" alt="" /></button>
-                <button className='nav-button' onClick={e => navigation("/createContract")}><img className='nav-btn-img' src="https://cdn.icon-icons.com/icons2/2946/PNG/512/paper_plus_icon_184281.png" alt="" /></button>
-                <button className='nav-button' onClick={e => navigation("/absenceNotice")}><img className='nav-btn-img' src="https://premiumwebsites.net/wp-content/uploads/2017/10/google-calendar.png" alt="" /></button>
-                <button className='nav-button' onClick={e => navigation("/contracts")}><img className='nav-btn-img' src="https://cdn.onlinewebfonts.com/svg/img_50288.png" alt="" /></button>
-                {/* <button className='nav-button' onClick={e => router.push("/chartsPage")}><img className='nav-btn-img' src="https://collegial.sainteanne.ca/wp-content/uploads/2022/01/noun-analytics-4111649-copy-2048x1993.png" alt="" /></button> */}
-            </div>
-                
-            <div className='nav-end'>
-                <button className='nav-button' onClick={e => navigation("/")}><img className='nav-btn-img' src="https://cdn3.iconfinder.com/data/icons/minimalisticons/28/Close-1024.png" alt="" /></button>
-            </div>
-        </div>
-
-        :
-        
-        <div className="navbar">
-            <div className='nav-start'>
-                <button onClick={toggleProfile} disabled={isProfileClicked} className='nav-button'><img className='nav-btn-img' src="https://cdn.onlinewebfonts.com/svg/img_217837.png" alt="fewre" /></button>
-                <Profile isOpen={isProfileOpen} onClose={toggleProfile}/>
-            </div>
-                
-            <div className='nav-end'>
-                <button className='nav-button' onClick={e => navigation("/")}><img className='nav-btn-img' src="https://cdn3.iconfinder.com/data/icons/minimalisticons/28/Close-1024.png" alt="" /></button>
-            </div>
-            
-        </div>
-    )
+  return (
+    <>
+      <Tabs defaultActiveKey={location.pathname} onTabClick={handleTabClick} className="navbar">
+        <TabPane
+          icon={<Icon path={mdiAccountCircleOutline} size={1} />}
+          tab={
+            <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+              Profile
+            </span>
+          }
+          key="profile"
+        />
+        {loggedUser.position === "director" && (
+          <>
+            <TabPane
+              icon={<Icon path={mdiFileDocumentOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Contracts
+                </span>
+              }
+              key="/contracts"
+            />
+            <TabPane
+              icon={<Icon path={mdiFilePlusOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  New Contract
+                </span>
+              }
+              key="/createContract"
+            />
+            <TabPane
+              icon={<Icon path={mdiClipboardCheckOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Tasks
+                </span>
+              }
+              key="/tasks"
+            />
+          </>
+        )}
+        {loggedUser.position === "head" && (
+          <>
+            <TabPane
+              icon={<Icon path={mdiAccountCardOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Pay sheets
+                </span>
+              }
+              key="/main"
+            />
+            <TabPane
+              icon={<Icon path={mdiFilePlusOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  New Contract
+                </span>
+              }
+              key="/createContract"
+            />
+            <TabPane
+              icon={<Icon path={mdiCalendarRemoveOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Notices
+                </span>
+              }
+              key="/absenceNotice"
+            />
+            <TabPane
+              icon={<Icon path={mdiFileDocumentOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Contracts
+                </span>
+              }
+              key="/contracts"
+            />
+            <TabPane
+              icon={<Icon path={mdiClipboardCheckOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Tasks
+                </span>
+              }
+              key="/tasks"
+            />
+          </>
+        )}
+        {loggedUser.position === "worker" && (
+          <>
+            <TabPane
+              icon={<Icon path={mdiAccountCardOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Pay sheets
+                </span>
+              }
+              key="/main"
+            />
+            <TabPane
+              icon={<Icon path={mdiClipboardCheckOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Tasks
+                </span>
+              }
+              key="/tasks"
+            />
+          </>
+        )}
+        <TabPane
+          icon={<Icon path={mdiLogout} size={1} />}
+          tab={
+            <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+              Logout
+            </span>
+          }
+          key="logout"
+        />
+      </Tabs>
+      <Profile isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+    </>
+  );
 }

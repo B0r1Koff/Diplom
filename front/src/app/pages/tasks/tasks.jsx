@@ -131,7 +131,7 @@ const TaskPage = () => {
                 status !== 'completed' ?
                 <Select
                     defaultValue={status}
-                    style={{ width: 120 }}
+                    style={{ width: '100%', height: '100%' }}
                     onChange={(value) => handleStatusChange(record.id, value)}
                 >
                     <Option value="created"><Tag color='blue'>created</Tag></Option>
@@ -193,6 +193,7 @@ const TaskPage = () => {
   };
 
   return (
+    <>
     <Container sx={{marginTop: '10vh'}}>
       <Typography variant="h4" gutterBottom>
         Tasks
@@ -253,7 +254,7 @@ const TaskPage = () => {
           >
             <Select mode="multiple" placeholder="Select users">
               {users.map(user => (
-                <Option key={user.id} value={user.id}>
+                <Option key={user.id} value={user.fio}>
                   {user.fio}
                 </Option>
               ))}
@@ -282,6 +283,9 @@ const TaskPage = () => {
         />
       )}
     </Container>
+
+    {/* <Navbar/> */}
+    </>
   );
 };
 

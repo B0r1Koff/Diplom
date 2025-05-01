@@ -55,11 +55,13 @@ export default function Auth(){
         localStorage.setItem('authToken', JSON.stringify(data.token));
         localStorage.setItem('loggedUser', JSON.stringify(data.record));
 
-        if(data.record.position === "director"){
-          navigation("/contracts")
-        }else{
-          navigation("/main")
-        }     
+        // if(data.record.position === "director"){
+        //   navigation("/contracts")
+        // }else{
+        //   navigation("/main")
+        // }     
+        
+        navigation("/tasks");
       }).catch(error => {
         console.log(error.toString().split(':')[0]);
         alert(error.toString().split(':')[0]);
