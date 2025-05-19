@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Modal, InputNumber, Input, Button, Flex, notification } from 'antd';
 import moment from 'moment';
 import Icon from '@mdi/react';
@@ -12,13 +12,17 @@ const TimeTracker = () => {
   const [hoursWorked, setHoursWorked] = useState(0);
   const [notes, setNotes] = useState('');
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('loggedUser')));
+  const [allReports, setAllReports] = useState([]);
   
   const pb = new PocketBase('http://127.0.0.1:8090');
 
-  const showModal = (date) => {
-    console.log(date);
+  const showModal = (date, report) => {
     setSelectedDate(date);
     setIsModalVisible(true);
+    if(report){
+      setNotes(report?.description);
+      setHoursWorked(report?.hours);
+    }
   };
 
   const handleCancel = () => {
@@ -58,6 +62,7 @@ const TimeTracker = () => {
       const record = pb.collection('Reports').update(id, data);
       record.then(() => {
         handleCancel();
+        getAllReportsData();
         notification.success({
           message: 'Успех',
           description: 'Данные успешно сохранены!',
@@ -84,6 +89,7 @@ const TimeTracker = () => {
       const record = pb.collection('Reports').create(data);
       record.then(() => {
         handleCancel();
+        getAllReportsData();
         notification.success({
           message: 'Успех',
           description: 'Данные успешно сохранены!',
@@ -102,7 +108,26 @@ const TimeTracker = () => {
     })
   };
 
+  const getAllReportsData = () => {
+    const records = pb.collection('Reports').getFullList({
+      filter: `user_id = '${currentUser?.id}'`,
+    });
+    records.then((data) => {
+      setAllReports(data);
+
+    })
+  };
+
+  useEffect(() => {
+    getAllReportsData();
+  }, []);
+
   const dateCellRender = (date) => {
+    console.log(date?.day());
+    const monthReport = allReports?.filter(report => report?.month === date?.month()+1)[0];
+    const dayReport = monthReport?.params?.[date?.date()]
+    const isDayOff = date?.day() === 6 || date?.day() === 0
+
     return (
       <div
         style={{
@@ -114,10 +139,13 @@ const TimeTracker = () => {
           border: '1px solid #d9d9d9',
         }}
       >
-        {date.date()}
-         <Button type='primary' size='small' onClick={() => showModal(date.format('YYYY-MM-DD'))} style={{ cursor: 'pointer', position: 'absolute', left: '5px', bottom: '5px' }}>
-        <Icon path={mdiPencil} size={0.6}/>
-      </Button>
+        <div>{`${monthReport?.params?.[date.date()]?.hours || 0}ч`}</div>
+        <div style={{position: 'absolute', bottom: '5px', right: '5px'}}>{date.date()}</div>
+        {!isDayOff &&
+          <Button type='primary' size='small' onClick={() => showModal(date.format('YYYY-MM-DD'), dayReport)} style={{ cursor: 'pointer', position: 'absolute', left: '5px', bottom: '5px' }}>
+            <Icon path={mdiPencil} size={0.6}/>
+          </Button>
+        }
       </div>
     );
   };
