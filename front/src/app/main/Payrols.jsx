@@ -4,6 +4,8 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import TimeTracker from '../pages/timeTracking/TimeTracking';
+import { Flex, Radio } from 'antd';
 
 export default function Main() {
     const [user, setLoggedUser] = useState(JSON.parse(localStorage.getItem('loggedUser')))
@@ -14,6 +16,12 @@ export default function Main() {
     const [contractSalary, setContractSalary] = useState(0)
     const [department, setDepartment] = useState("")
     const [isData, setIsData] = useState(false)
+
+    const [mode, setMode] = useState('calendar');
+
+  const handleModeChange = (e) => {
+    setMode(e.target.value);
+  };
 
   useEffect(() => {
     axios.get(`http://127.0.0.1:8090/api/collections/MonthData/records?filter=(user_id='${user.id}')`)
@@ -71,8 +79,15 @@ export default function Main() {
     }
 
     return (
+      <>
+      <Flex style={{position: 'absolute', top: '60px', left: '20px'}}>
+        <Radio.Group onChange={handleModeChange} value={mode} style={{ marginBottom: 8 }}>
+          <Radio.Button value="calendar">Рабочие записи</Radio.Button>
+          <Radio.Button value="payslip">Расчетные листы</Radio.Button>
+        </Radio.Group>
+      </Flex>
+        {mode === "payslip" ?
         <div className='mainpage'>
-          
           {isData ? 
                 <div className="payslip">
   
@@ -109,5 +124,9 @@ export default function Main() {
             
             {/* <Navbar/> */}
         </div>
+
+        :  <TimeTracker/>
+}
+           </>
     )
 }

@@ -13,6 +13,7 @@ import AbsenceNotice from './app/absenceNotice/Notices'
 import TaskPage from './app/pages/tasks/tasks'
 import Navbar from './app/2components/navbar/navbar'
 import { createTheme, MantineProvider } from '@mantine/core';
+import TimeTracker from './app/pages/timeTracking/TimeTracking'
 
 function App() {
   const myColor = [
@@ -44,6 +45,7 @@ function App() {
         <Route path='/createContract' element={<><Navbar/><CreateContract/></>}/>
         <Route path='/absenceNotice' element={<><Navbar/><AbsenceNotice/></>}/>
         <Route path='/tasks' element={<><Navbar/><TaskPage/></>}/>
+        {/* <Route path='/timeTracking' element={<><Navbar/><TimeTracker/></>}/> */}
       </Routes>
     </MantineProvider>
   )

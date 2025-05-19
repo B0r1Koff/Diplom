@@ -19,7 +19,7 @@ const { TabPane } = Tabs;
 
 export default function Navbar() {
   const pathes = {
-    worker: ["/main", "/tasks"],
+    worker: ["/main", "/tasks", "/timeTracking"],
     head: [
       "/main",
       "/createContract",
@@ -27,8 +27,9 @@ export default function Navbar() {
       "/contracts",
       "/chartsPage",
       "/tasks",
+      "/timeTracking",
     ],
-    director: ["/contracts", "/createContract", "/tasks"],
+    director: ["/contracts", "/createContract", "/tasks", "/timeTracking"],
   };
   const [loggedUser, setLoggedUser] = useState(
     JSON.parse(localStorage.getItem("loggedUser"))
