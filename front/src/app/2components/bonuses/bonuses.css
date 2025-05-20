@@ -1,12 +1,3 @@
-.bonuses-info-form{
-    display: flex;
-    flex-direction: row;
-}
-.bonuses-info-box{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 .bonuses-info-container{
     width: 31vw;
     min-width: 350px;
@@ -37,11 +28,13 @@
     transition: all 0.3s cubic-bezier(0.445 , 2.05 , 0.855 , 0.95);
     transition-delay: 0.5s;
 }
-.bonuses-info-box .bonuses-info-input_box{
+.bonuses-info-box .bonuses-info-form .bonuses-info-input_box{
     text-align: center;
     border: 2px solid #000;
     border-radius: 5px;
+    /* margin-bottom: 25px; */
     position: relative;
+    width: 94%;
 }
 .bonuses-info-box .bonuses-info-form .bonuses-info-input_box .bonuses-info-input{
     width: 95%;
@@ -73,7 +66,7 @@
     font-size: 30px;
     border: none;
     padding: 10px 15px;
-    margin-top: 20px;
+    margin-top: 5px;
     border-radius: 200px;
     font-weight: bold;
     cursor: pointer;
@@ -92,36 +85,11 @@
 .bonuses-info-box .bonuses-info-form,
 .bonuses-info-box .bonuses-info-form{
     font-size: 20px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     text-align: center;
 }
-
-.new-bonus-button{
-    width: 120px;
-    height: 30px;
-    background-color:rgb(60, 60, 60);
-    border-radius: 7px;
-    font-size: medium;
-    border: 2px solid bisque;
-    border: 0px;
-}
-
-.new-bonus-button:hover{
-    background-color: burlywood;
-    color: black;
-}
-
-.delete-bonus-button{
-    width: 120px;
-    height: 55.2px;
-    background-color:rgb(60, 60, 60);
-    border-radius: 7px;
-    font-size: medium;
-    border: 2px solid bisque;
-    border: 0px;
-}
-
-.delete-bonus-button:hover{
-    background-color: burlywood;
-    color: black;
+.bonuses-info-box .bonuses-info-form,
+.bonuses-info-box .bonuses-info-form,
+.bonuses-info-box .bonuses-info-form{
+    text-decoration: underline;
 }

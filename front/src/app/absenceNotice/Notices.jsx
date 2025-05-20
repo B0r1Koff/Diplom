@@ -6,14 +6,15 @@ import PocketBase from 'pocketbase';
 
 export default function AbsenceNotice(){
     const pb = new PocketBase("http://127.0.0.1:8090")
-    const typesOfAbsence = ["Отпуск", "Больничный", "Оплачиваемый отпуск", "Прогул"]
-
-    const [noticeData, setNoticeData] = useState({
+    const typesOfAbsence = ["Отпуск", "Больничный", "Оплачиваемый отпуск", "Прогул"];
+    const defaultNoticeState = {
       start_date: "",
       end_date: "",
       type: "",
       user_id: ""
-    });
+    };
+
+    const [noticeData, setNoticeData] = useState(defaultNoticeState);
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -24,7 +25,8 @@ export default function AbsenceNotice(){
       const record = pb.collection('Notices').create(noticeData);
       record.then(response => {
         if(response.created){
-          alert("Уведомление создано")
+          alert("Уведомление создано");
+          setNoticeData(defaultNoticeState);
         }
       })
     };

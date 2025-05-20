@@ -25,27 +25,32 @@ export default function CreateContract(){
 
     const [newDepartment, setNewDepartment] = useState("")
 
-    const [userData, setUserData] = useState({
+    const defaultUserData = {
         fio: '',
         login: '',
         password: '',
+        role: '',
         department_id: user.department_id,
         position: 'worker'
-      });
-    
-      const [contractData, setContractData] = useState({
+      };
+
+    const defaultContractData = {
         salary: '',
         sick_days: '',
         date_of_start: '',
         date_of_end: '',
-        user_id: ''
-      });
+        start_working_date: '',
+      };
 
-      const [bonuses, setBonuses] = useState({
-        experience: 0,
-        overworking: 0,
-        user_id: ''
-      });
+    const defaultBonusesData = {
+        "По контракту": 0,
+      };
+
+    const [userData, setUserData] = useState(defaultUserData);
+    
+      const [contractData, setContractData] = useState(defaultContractData);
+
+      const [bonuses, setBonuses] = useState(defaultBonusesData);
 
       const handleSubmit = () => {
         if(user.position === "director" && newDepartment !== ""){
@@ -77,6 +82,7 @@ export default function CreateContract(){
           "username": userData.login,
           "password": userData.password,
           "passwordConfirm": userData.password,
+          "role": userData.role,
           "department_id": id,
           "position": "head"
         });
@@ -86,20 +92,17 @@ export default function CreateContract(){
             "sick_days": contractData.sick_days,
             "users_id": id,
             "date_of_start": contractData.date_of_start,
-            "date_of_end": contractData.date_of_end
+            "date_of_end": contractData.date_of_end,
+            "start_working_date": contractData.start_working_date,
+
         });
-          const experienceAllowance = pb.collection('Allowances').create({
-            "percent": parseInt(Math.abs(bonuses.experience)) || 0,
-            "type": "experience",
-            "user_id": id
-          });
-          setTimeout(() => {
-            const overworkingAllowance = pb.collection('Allowances').create({
-              "percent": parseInt(Math.abs(bonuses.overworking)) || 0,
-              "type": "overworking",
+          Object?.keys(bonuses)?.map(key => {
+              const allowance = pb.collection('Allowances').create({
+              "percent": parseInt(Math.abs(bonuses.key)) || 0,
+              "type": key,
               "user_id": id
             });
-          }, 300);
+          })
         })
           })
 
@@ -131,6 +134,7 @@ export default function CreateContract(){
           "password": userData.password,
           "passwordConfirm": userData.password,
           "department_id": userData.department_id,
+          "role": userData.role,
           "position": "worker"
         });
         worker.then(function({id}){
@@ -139,20 +143,22 @@ export default function CreateContract(){
             "sick_days": contractData.sick_days,
             "user_id": id,
             "date_of_start": contractData.date_of_start,
-            "date_of_end": contractData.date_of_end
+            "date_of_end": contractData.date_of_end,
+            "start_working_date": contractData.start_working_date,
         });
-          const experienceAllowance = pb.collection('Allowances').create({
-            "percent": parseInt(Math.abs(bonuses.experience)) || 0,
-            "type": "experience",
-            "user_id": id
-          });
-          setTimeout(() => {
-            const overworkingAllowance = pb.collection('Allowances').create({
-              "percent": parseInt(Math.abs(bonuses.overworking)) || 0,
-              "type": "overworking",
-              "user_id": id
-            });
-          }, 300);
+
+        setTimeout(() => {
+              const allowance = pb.collection('Allowances').create({
+                "params": bonuses,
+                "user_id": id
+              });
+
+              allowance.then(() => {
+                setBonuses(defaultBonusesData);
+                setContractData(defaultContractData);
+                setUserData(defaultUserData);
+              })
+            }, 300)
         })
         }
 
@@ -165,7 +171,7 @@ export default function CreateContract(){
             <div className='contract-info-wrapper'>
               <UserInfo userData={userData} setUserData={setUserData}/>
               <ContractInfo contractData={contractData} setContractData={setContractData}/>
-              {/* <Bonuses bonuses={bonuses} setBonuses={setBonuses}/> */}
+              <Bonuses bonuses={bonuses} setBonuses={setBonuses}/>
             </div>
             {user.position === "director" && 
               <div className="worker-info-container">   

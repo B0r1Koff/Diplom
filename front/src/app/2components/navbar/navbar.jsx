@@ -61,7 +61,7 @@ export default function Navbar() {
           icon={<Icon path={mdiAccountCircleOutline} size={1} />}
           tab={
             <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-              Profile
+              Профиль
             </span>
           }
           key="profile"
@@ -72,7 +72,7 @@ export default function Navbar() {
               icon={<Icon path={mdiFileDocumentOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Contracts
+                  Контракты
                 </span>
               }
               key="/contracts"
@@ -81,7 +81,7 @@ export default function Navbar() {
               icon={<Icon path={mdiFilePlusOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  New Contract
+                  Новый контракт
                 </span>
               }
               key="/createContract"
@@ -90,7 +90,7 @@ export default function Navbar() {
               icon={<Icon path={mdiClipboardCheckOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Tasks
+                  Задачи
                 </span>
               }
               key="/tasks"
@@ -103,7 +103,7 @@ export default function Navbar() {
               icon={<Icon path={mdiAccountCardOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Pay sheets
+                  Рабочие отчеты
                 </span>
               }
               key="/main"
@@ -112,7 +112,7 @@ export default function Navbar() {
               icon={<Icon path={mdiFilePlusOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  New Contract
+                  Новый контракт
                 </span>
               }
               key="/createContract"
@@ -121,7 +121,7 @@ export default function Navbar() {
               icon={<Icon path={mdiCalendarRemoveOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Notices
+                  Уведомления
                 </span>
               }
               key="/absenceNotice"
@@ -130,7 +130,7 @@ export default function Navbar() {
               icon={<Icon path={mdiFileDocumentOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Contracts
+                  Контракты
                 </span>
               }
               key="/contracts"
@@ -139,7 +139,7 @@ export default function Navbar() {
               icon={<Icon path={mdiClipboardCheckOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Tasks
+                  Задачи
                 </span>
               }
               key="/tasks"
@@ -152,7 +152,7 @@ export default function Navbar() {
               icon={<Icon path={mdiAccountCardOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Pay sheets
+                  Рабочие отчеты
                 </span>
               }
               key="/main"
@@ -161,7 +161,7 @@ export default function Navbar() {
               icon={<Icon path={mdiClipboardCheckOutline} size={1} />}
               tab={
                 <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-                  Tasks
+                  Задачи
                 </span>
               }
               key="/tasks"
@@ -172,7 +172,7 @@ export default function Navbar() {
           icon={<Icon path={mdiLogout} size={1} />}
           tab={
             <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
-              Logout
+              Выйти
             </span>
           }
           key="logout"
