@@ -1,5 +1,6 @@
 import React from 'react';
-import { Modal, Descriptions, Tag } from 'antd';
+import { Modal, Descriptions, Tag, List, Upload, Button } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 
 const TaskInfoModal = ({ visible, onCancel, task, users }) => {
   const assignedUsers = task.assigned_users?.map(userId => {
@@ -23,6 +24,21 @@ const TaskInfoModal = ({ visible, onCancel, task, users }) => {
         </Descriptions.Item>
         <Descriptions.Item label="Description">{task.description}</Descriptions.Item>
         <Descriptions.Item label="Assigned Users">{assignedUsers}</Descriptions.Item>
+        <Descriptions.Item label="Files">
+          {task.files && (
+            <Upload
+              fileList={task.files.map((file, index) => ({
+                uid: index,
+                name: file.filename,
+                status: 'done',
+                url: file.content,
+              }))}
+              listType="text"
+            >
+              <Button icon={<InboxOutlined />}>Upload</Button>
+            </Upload>
+          )}
+        </Descriptions.Item>
       </Descriptions>
     </Modal>
   );

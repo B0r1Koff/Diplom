@@ -139,7 +139,7 @@ const TimeTracker = () => {
           border: '1px solid #d9d9d9',
         }}
       >
-        <div>{`${monthReport?.params?.[date.date()]?.hours || 0}ч`}</div>
+        <div>{isDayOff ? "-" : `${monthReport?.params?.[date.date()]?.hours || 0}ч`}</div>
         <div style={{position: 'absolute', bottom: '5px', right: '5px'}}>{date.date()}</div>
         {!isDayOff &&
           <Button type='primary' size='small' onClick={() => showModal(date.format('YYYY-MM-DD'), dayReport)} style={{ cursor: 'pointer', position: 'absolute', left: '5px', bottom: '5px' }}>
