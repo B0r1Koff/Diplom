@@ -14,7 +14,13 @@ const { RangePicker } = DatePicker;
 const { Dragger } = Upload;
 
 const TaskPage = () => {
-    const pb = new PocketBase("http://127.0.0.1:8090");
+  const KPI = {
+    "low": 1,
+    "medium": 2,
+    "high": 3
+  };
+
+  const pb = new PocketBase("http://127.0.0.1:8090");
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -67,6 +73,10 @@ const TaskPage = () => {
     fetchData();
   }, [filteredUser, filteredStatus, page, pageSize, sortOrder]);
 
+  useEffect(() => {
+    console.log(fileList);
+  }, [fileList])
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -79,26 +89,11 @@ const TaskPage = () => {
     setIsModalVisible(false);
   };
 
-  const onFinish = async (values) => {
-    const filePromises = fileList.map(file => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          resolve({
-            filename: `сжатый файл ${file.name}`,
-            content: event.target.result,
-          });
-        };
-        reader.readAsDataURL(file.originFileObj);
-      });
-    });
-
-    const filesJson = await Promise.all(filePromises);
-
+  const onFinish = async (values) => {    
     const data = {
       ...values,
       "status": "created",
-      "files": filesJson,
+      "files": null
     };
 
     const record = pb.collection('Tasks').create(data);
@@ -134,8 +129,77 @@ const TaskPage = () => {
     setPage(pagination.current);
   };
 
-  const handleStatusChange = async (taskId, status) => {
+  const handleStatusChange = async (task, status) => {
+    const taskId = task?.id;
+    const taskPriority = task?.priority;
+    const users = task?.assigned_users;
+
     await axios.patch(`http://127.0.0.1:8090/api/collections/tasks/records/${taskId}`, { status });
+    const tasksResponse = await axios.get('http://127.0.0.1:8090/api/collections/tasks/records');
+    setTasks(tasksResponse.data.items);
+
+    if(status === "completed"){
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
+
+      for(let i = 0; i < users?.length; i++){
+        const userId = users[i];
+
+        const resultList = await pb.collection('KPI').getList(1, 1, {
+          filter: `user_id = '${userId}' && month = '${month}' && year = ${year}`,
+        });
+        
+        if(resultList?.items?.length === 0){
+          const data = {
+            "month": month,
+            "year": year,
+            "number": KPI?.[taskPriority],
+            "user_id": userId
+          };
+
+          const record = pb.collection('KPI').create(data);
+          record?.then(() => {
+            notification.success({
+              message: 'Успех',
+              description: `Выполнение задачи завершено`,
+            });
+          }).catch((error) => {
+            notification.error({
+              message: 'Ошибка',
+              description: `Произошла ошибка: ${error.message}`,
+            });
+          })
+        }else{
+          const recordId = resultList?.items[0]?.id;
+          const kpi = resultList?.items?.[0]?.number;
+
+          const data = {
+            "month": month,
+            "year": year,
+            "number": kpi + KPI?.[taskPriority],
+            "user_id": userId
+        };
+
+        const record = pb.collection('KPI').update(recordId, data);
+        record?.then(() => {
+          notification.success({
+              message: 'Успех',
+              description: `Выполнение задачи завершено`,
+            });
+          }).catch((error) => {
+            notification.error({
+              message: 'Ошибка',
+              description: `Произошла ошибка: ${error.message}`,
+            });
+          })
+        }
+      }
+    }
+  };
+
+  const handlePriorityChange = async (taskId, priority) => {
+    await axios.patch(`http://127.0.0.1:8090/api/collections/tasks/records/${taskId}`, { priority });
     const tasksResponse = await axios.get('http://127.0.0.1:8090/api/collections/tasks/records');
     setTasks(tasksResponse.data.items);
   };
@@ -157,7 +221,7 @@ const TaskPage = () => {
     const totalDuration = end.diff(start, 'days');
     const elapsedDuration = today.diff(start, 'days');
     const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
-    return progress;
+    return parseInt(progress);
   };
 
   const columns = [
@@ -179,18 +243,18 @@ const TaskPage = () => {
                 <Select
                     defaultValue={status}
                     style={{ width: '100%', height: '100%' }}
-                    onChange={(value) => handleStatusChange(record.id, value)}
+                    onChange={(value) => handleStatusChange(record, value)}
                 >
                     <Option value="created"><Tag color='blue'>Создана</Tag></Option>
                     <Option value="in progress"><Tag color='orange'>Выполняется</Tag></Option>
                     <Option value="ready for review"><Tag color='purple'>Готова к проверке</Tag></Option>
                     <Option value="reopened"><Tag color='magenta'>Отправлена на доработку</Tag></Option>
-                    {!record?.assigned_users?.includes(currentUser?.id) &&
+                    {/* {!record?.assigned_users?.includes(currentUser?.id) && */}
                       <Option value="completed"><Tag color='green'>Выполнена</Tag></Option>
-                    }
+                    {/* } */}
                 </Select>
                 :
-                <Tag color='green'>Создана</Tag>
+                <Tag color='green'>Выполнена</Tag>
             }
         </>
       ),
@@ -200,10 +264,16 @@ const TaskPage = () => {
         dataIndex: 'priority',
         key: 'priority',
         sort: true,
-        render: (priority) => (
-          <Tag color={priority === 'low' ? 'blue' : priority === 'medium' ? 'orange' : 'red'}>
-            {priority}
-          </Tag>
+        render: (priority, record) => (
+          <Select
+                    defaultValue={priority}
+                    style={{ width: '100%', height: '100%' }}
+                    onChange={(value) => handlePriorityChange(record.id, value)}
+                >
+                    <Option value="low"><Tag color='blue'>Низкий</Tag></Option>
+                    <Option value="medium"><Tag color='orange'>Средний</Tag></Option>
+                    <Option value="high"><Tag color='red'>Высокий</Tag></Option>
+                </Select>
         ),
       },
     {
@@ -252,6 +322,25 @@ const TaskPage = () => {
 
   const updateStatus = (task) => {
     // Реализуйте логику обновления статуса задачи
+  };
+
+   const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
   };
 
   return (
@@ -367,14 +456,19 @@ const TaskPage = () => {
           </Form.Item>
           <Form.Item label="Upload Files">
             <Dragger
-              multiple
               fileList={fileList}
-              onChange={({ fileList }) => setFileList(fileList)}
+              onChange={onChange}
+              onPreview={onPreview}
+              beforeUpload={() => false} // Prevent automatic upload
             >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+                banned files.
+              </p>
             </Dragger>
           </Form.Item>
         </Form>
