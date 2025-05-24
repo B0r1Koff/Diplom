@@ -35,7 +35,7 @@ export default function Bonuses({bonuses, setBonuses}){
                     </div> */}
                     <div className="bonuses-info-input_box">
                       <input type="number" required className="bonuses-info-input" placeholder="Введите значение" name={bonus} value={bonuses.bonus} onChange={handleBonusChange}/>
-                      <label className="bonuses-info-label">{bonus}</label>
+                      <label className="bonuses-info-label"><span className="bonuses-info-label-span">{`${bonus} (%)`}</span></label>
                     </div>
                   </div>
                   )
@@ -44,7 +44,7 @@ export default function Bonuses({bonuses, setBonuses}){
                 <div className="bonuses-info-form">
                     <div className="bonuses-info-input_box">
                       <input type="text" required className="bonuses-info-input" value={newAllowanceName} onChange={(e) => {setNewAllowanseName(e.target.value)}}/>
-                      <label className="bonuses-info-label">Новая надбавка:</label>
+                      <label className="bonuses-info-label">Название новой надбавки:</label>
                     </div>
                     <Button style={{marginTop: '20px', marginRight: '50px'}} disabled={newAllowanceName?.length === 0} onClick={addNewAllowance}>Добавить</Button>
                   </div>

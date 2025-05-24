@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export const getDepartment = (departments, id) => {
     let result = ""
     departments.map(department => {
@@ -43,6 +45,26 @@ export const getSalary = (contracts, id) => {
       }
     })
     return result
+}
+
+export const getStartDate = (contracts, id) => {
+    let date = '-'
+    contracts.map(contract => {
+      if(contract.user_id === id){
+        date = moment(contract.date_of_start).format('DD-MM-YYYY')
+      }
+    })
+    return date;
+}
+
+export const getEndDate = (contracts, id) => {
+    let date = '-'
+    contracts.map(contract => {
+      if(contract.user_id === id){
+        date = moment(contract.date_of_end).format('DD-MM-YYYY')
+      }
+    })
+    return date;
 }
 
 export const findUserByLogin = (users, login) => {

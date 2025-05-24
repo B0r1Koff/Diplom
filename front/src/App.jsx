@@ -16,27 +16,9 @@ import { createTheme, MantineProvider } from '@mantine/core';
 import TimeTracker from './app/pages/timeTracking/TimeTracking'
 
 function App() {
-  const myColor = [
-    '#fff0e4',
-    '#ffe0cf',
-    '#fac0a1',
-    '#f69e6e',
-    '#f28043',
-    '#f06e27',
-    '#f06418',
-    '#d6530c',
-    '#bf4906',
-    '#a73c00'
-  ];
-  
-  const theme = createTheme({
-    colors: {
-      myColor,
-    }
-  });
 
   return (
-    <MantineProvider theme={theme}>
+    <>
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/registration' element={<><Navbar/><Registration/></>}/>
@@ -47,7 +29,7 @@ function App() {
         <Route path='/tasks' element={<><Navbar/><TaskPage/></>}/>
         {/* <Route path='/timeTracking' element={<><Navbar/><TimeTracker/></>}/> */}
       </Routes>
-    </MantineProvider>
+    </>
   )
 }
 

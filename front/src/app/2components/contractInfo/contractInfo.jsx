@@ -3,6 +3,7 @@ import { useState } from "react";
 import Bonuses from "../bonuses/bonuses";
 
 export default function ContractInfo({contractData, setContractData}){
+  const typesOfContract = ["Повременно-премиальная", "Сдельно-премиальная"]
 
     const handleContractDataChange = (e) => {
         const { name, value } = e.target;
@@ -11,6 +12,10 @@ export default function ContractInfo({contractData, setContractData}){
           [name]: value
         }));
       };
+
+      const contractTypeOptions = typesOfContract.map(type => {
+        return <option key={type}>{type}</option>
+    });
 
     return(
       <div className="contract-info-container">   
@@ -26,8 +31,10 @@ export default function ContractInfo({contractData, setContractData}){
               <label className="contract-info-label">Число дней отпуска в год:</label>
             </div>
             <div className="contract-info-input_box">
-              <input type="date" required className="contract-info-input" name="start_working_date" placeholder="Дата приема на работу" value={contractData.start_working_date} onChange={handleContractDataChange}/>
-              <label className="contract-info-label">Дата приема на работу:</label>
+              <select type="date" required className="contract-info-input" name="contract_type" placeholder="Дата приема на работу" value={contractData.contract_type} onChange={handleContractDataChange}>
+                {contractTypeOptions}
+              </select>
+              <label className="contract-info-label">Тип оплаты:</label>
             </div>
             <div className="contract-info-input_box">
               <input type="date" required className="contract-info-input" name="date_of_start" placeholder="Дата начала" value={contractData.date_of_start} onChange={handleContractDataChange}/>

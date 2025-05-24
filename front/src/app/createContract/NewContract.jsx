@@ -7,6 +7,7 @@ import Bonuses from '../2components/bonuses/bonuses';
 import PocketBase from 'pocketbase';
 import axios from 'axios';
 import { findUserByLogin } from '../functions/functions';
+import { notification } from 'antd';
 
 export default function CreateContract(){
     const [user, setLoggedUser] = useState(JSON.parse(localStorage.getItem('loggedUser')) || null)
@@ -40,76 +41,74 @@ export default function CreateContract(){
         date_of_start: '',
         date_of_end: '',
         start_working_date: '',
+        contract_type: '',
       };
 
-    const defaultBonusesData = {
-        "По контракту": 0,
-      };
+    const defaultBonusesData = { };
 
-    const [userData, setUserData] = useState(defaultUserData);
+      const [userData, setUserData] = useState(defaultUserData);
     
       const [contractData, setContractData] = useState(defaultContractData);
 
       const [bonuses, setBonuses] = useState(defaultBonusesData);
 
       const handleSubmit = () => {
-        if(user.position === "director" && newDepartment !== ""){
+        // if(user.position === "director" && newDepartment !== ""){
         
-          const record = pb.collection('Department').create({
-            "name": newDepartment
-          });
-          record.then(function({id}){
-            if(userData.fio === "" || userData.login === "" || userData.password === "" || contractData.date_of_end === "" || contractData.date_of_start === "" || contractData.salary === "" || contractData.sick_days === ""){
-          alert("Заполните все поля!")
-          return
-        }
-        if(userData.login.length < 8){
-          alert("Длина логина должна быть 8 и более символов!")
-          return
-        }
-        if(findUserByLogin(users, userData.login)){
-          alert("Логин сотрудника не уникальный!")
-          return
-        }
-        if(Math.abs(bonuses.experience ) > 15 || Math.abs(bonuses.overworking) > 15){
-          alert("Размер надбавки не должен превышать 15 процентов!")
-          return
-        }
-        const worker = pb.collection('users').create({
-          "fio": userData.fio,
-          "email": null,
-          "emailVisibility": true,
-          "username": userData.login,
-          "password": userData.password,
-          "passwordConfirm": userData.password,
-          "role": userData.role,
-          "department_id": id,
-          "position": "head"
-        });
-        worker.then(function({id}){
-          const contract = pb.collection('Contract').create({
-            "salary": contractData.salary,
-            "sick_days": contractData.sick_days,
-            "users_id": id,
-            "date_of_start": contractData.date_of_start,
-            "date_of_end": contractData.date_of_end,
-            "start_working_date": contractData.start_working_date,
+        //   const record = pb.collection('Department').create({
+        //     "name": newDepartment
+        //   });
+        //   record.then(function({id}){
+        //     if(userData.fio === "" || userData.login === "" || userData.password === "" || contractData.date_of_end === "" || contractData.date_of_start === "" || contractData.salary === "" || contractData.sick_days === ""){
+        //   alert("Заполните все поля!")
+        //   return
+        // }
+        // if(userData.login.length < 8){
+        //   alert("Длина логина должна быть 8 и более символов!")
+        //   return
+        // }
+        // if(findUserByLogin(users, userData.login)){
+        //   alert("Логин сотрудника не уникальный!")
+        //   return
+        // }
+        // if(Math.abs(bonuses.experience ) > 15 || Math.abs(bonuses.overworking) > 15){
+        //   alert("Размер надбавки не должен превышать 15 процентов!")
+        //   return
+        // }
+        // const worker = pb.collection('users').create({
+        //   "fio": userData.fio,
+        //   "email": null,
+        //   "emailVisibility": true,
+        //   "username": userData.login,
+        //   "password": userData.password,
+        //   "passwordConfirm": userData.password,
+        //   "role": userData.role,
+        //   "department_id": id,
+        //   "position": "head"
+        // });
+        // worker.then(function({id}){
+        //   const contract = pb.collection('Contract').create({
+        //     "salary": contractData.salary,
+        //     "sick_days": contractData.sick_days,
+        //     "users_id": id,
+        //     "date_of_start": contractData.date_of_start,
+        //     "date_of_end": contractData.date_of_end,
+        //     "start_working_date": contractData.start_working_date,
 
-        });
-          Object?.keys(bonuses)?.map(key => {
-              const allowance = pb.collection('Allowances').create({
-              "percent": parseInt(Math.abs(bonuses.key)) || 0,
-              "type": key,
-              "user_id": id
-            });
-          })
-        })
-          })
+        // });
+        //   Object?.keys(bonuses)?.map(key => {
+        //       const allowance = pb.collection('Allowances').create({
+        //       "percent": parseInt(Math.abs(bonuses.key)) || 0,
+        //       "type": key,
+        //       "user_id": id
+        //     });
+        //   })
+        // })
+        //   })
 
-          alert("Отдел создан!")
-        }
-        else{
-        
+        //   alert("Отдел создан!")
+        // }
+        // else{
         if(userData.fio === "" || userData.login === "" || userData.password === "" || contractData.date_of_end === "" || contractData.date_of_start === "" || contractData.salary === "" || contractData.sick_days === ""){
           alert("Заполните все поля!")
           return
@@ -122,8 +121,8 @@ export default function CreateContract(){
           alert("Логин сотрудника не уникальный!")
           return
         }
-        if(Math.abs(bonuses.experience ) > 15 || Math.abs(bonuses.overworking) > 15){
-          alert("Размер надбавки не должен превышать 15 процентов!")
+        if(Object?.values(bonuses)?.some(bonus => bonus > 50)){
+          alert("Размер надбавки не должен превышать 50 процентов!")
           return
         }
         const worker = pb.collection('users').create({
@@ -145,10 +144,11 @@ export default function CreateContract(){
             "date_of_start": contractData.date_of_start,
             "date_of_end": contractData.date_of_end,
             "start_working_date": contractData.start_working_date,
+            "is_time_based": contractData.contract_type === "Повременно-премиальная",
         });
 
-        setTimeout(() => {
-              const allowance = pb.collection('Allowances').create({
+        contract.then(() => {
+          const allowance = pb.collection('Allowances').create({
                 "params": bonuses,
                 "user_id": id
               });
@@ -157,12 +157,30 @@ export default function CreateContract(){
                 setBonuses(defaultBonusesData);
                 setContractData(defaultContractData);
                 setUserData(defaultUserData);
+                notification.success({
+                  message: 'Успех',
+                  description: `Контракт успешно создан`,
+                })
+              }).catch((error) => {
+                  notification.error({
+                    message: 'Ошибка',
+                    description: `Произошла ошибка: ${error.message}`,
+                });
+                pb.collection('users').delete(id);
               })
-            }, 300)
+        }).catch((error) => {
+          notification.error({
+            message: 'Ошибка',
+            description: `Произошла ошибка: ${error.message}`,
+          });
+          pb.collection('users').delete(id);
         })
-        }
-
-        alert("Сотрудник зарегистрирован!")
+        }).catch((error) => {
+          notification.error({
+            message: 'Ошибка',
+            description: `Произошла ошибка: ${error.message}`,
+          });
+        })
       };
 
     return(
@@ -173,7 +191,7 @@ export default function CreateContract(){
               <ContractInfo contractData={contractData} setContractData={setContractData}/>
               <Bonuses bonuses={bonuses} setBonuses={setBonuses}/>
             </div>
-            {user.position === "director" && 
+            {/* {user.position === "director" && 
               <div className="worker-info-container">   
               <div className="worker-info-box">
               <h3 className="worker-info-h3"><span className="worker-info-span"></span>Отделение</h3>
@@ -185,7 +203,7 @@ export default function CreateContract(){
                 </div>
               </div>
               </div>
-            }
+            } */}
             <button className='create-contract-button' onClick={handleSubmit}>Создать</button>
           </div>
           {/* <Navbar/> */}

@@ -93,3 +93,8 @@
 .bonuses-info-box .bonuses-info-form{
     text-decoration: underline;
 }
+
+.bonuses-info-label-span{
+    overflow-wrap: break-all;
+    text-overflow: ellipsis;
+}

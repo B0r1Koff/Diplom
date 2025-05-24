@@ -55,7 +55,7 @@ export default function Navbar() {
   };
 
   return (
-    <>
+    <div style={{position: 'fixed', top: '0px', zIndex: '1002'}}>
       <Tabs defaultActiveKey={location.pathname} onTabClick={handleTabClick} className="navbar">
         <TabPane
           icon={<Icon path={mdiAccountCircleOutline} size={1} />}
@@ -179,6 +179,6 @@ export default function Navbar() {
         />
       </Tabs>
       <Profile isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
-    </>
+    </div>
   );
 }
