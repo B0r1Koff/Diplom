@@ -1,4 +1,4 @@
-routerAdd("POST", "/api/collections/users/payroll", (c) => {
+routerAdd("GET", "/api/calculate", (c) => {
     const monthes = arrayOf(new DynamicModel({
         "date": ""
     }))
@@ -151,6 +151,9 @@ routerAdd("POST", "/api/collections/users/payroll", (c) => {
 
       if(new Date(monthes.reverse()[0].date.substring(0,10)).getMonth() < new Date().getMonth()+1){
         calculateSalary(contracts, notices, allowances)
+
+        return c.json(200, {"message": "Hello!"})
       }
-      
+
+      return c.json(200, {"message": "Hello!"})
 })

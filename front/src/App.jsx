@@ -14,6 +14,7 @@ import TaskPage from './app/pages/tasks/tasks'
 import Navbar from './app/2components/navbar/navbar'
 import { createTheme, MantineProvider } from '@mantine/core';
 import TimeTracker from './app/pages/timeTracking/TimeTracking'
+import Pocketbase from 'pocketbase';
 
 function App() {
 
