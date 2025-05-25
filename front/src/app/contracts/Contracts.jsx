@@ -28,8 +28,8 @@ export default function ContractsPage() {
   }));
 
   const years = Array.from({ length: 10 }, (_, i) => ({
-    value: year - 5 + i,
-    label: year - 5 + i
+    value: year - 9 + i,
+    label: year - 9 + i
   }));
 
   const holidays = [

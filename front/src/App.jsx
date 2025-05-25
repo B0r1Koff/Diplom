@@ -15,6 +15,8 @@ import Navbar from './app/2components/navbar/navbar'
 import { createTheme, MantineProvider } from '@mantine/core';
 import TimeTracker from './app/pages/timeTracking/TimeTracking'
 import Pocketbase from 'pocketbase';
+import Analitics from './app/pages/analitics/Analitics'
+import EnterpriseStructure from './app/pages/structure/Structure'
 
 function App() {
 
@@ -28,6 +30,8 @@ function App() {
         <Route path='/createContract' element={<><Navbar/><CreateContract/></>}/>
         <Route path='/absenceNotice' element={<><Navbar/><AbsenceNotice/></>}/>
         <Route path='/tasks' element={<><Navbar/><TaskPage/></>}/>
+        <Route path='/analytics' element={<><Navbar/><Analitics/></>}/>
+        <Route path='/structure' element={<><Navbar/><EnterpriseStructure/></>}/>
         {/* <Route path='/timeTracking' element={<><Navbar/><TimeTracker/></>}/> */}
       </Routes>
     </>

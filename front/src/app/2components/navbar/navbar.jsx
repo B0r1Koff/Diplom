@@ -13,6 +13,8 @@ import {
   mdiLogout,
   mdiAccountCircleOutline,
   mdiAccountCardOutline,
+  mdiGoogleAnalytics,
+  mdiBallotOutline,
 } from "@mdi/js";
 
 const { TabPane } = Tabs;
@@ -29,7 +31,7 @@ export default function Navbar() {
       "/tasks",
       "/timeTracking",
     ],
-    director: ["/contracts", "/createContract", "/tasks", "/timeTracking"],
+    director: ["/contracts", "/createContract", "/tasks", "/timeTracking", "/analytics", "/structure"],
   };
   const [loggedUser, setLoggedUser] = useState(
     JSON.parse(localStorage.getItem("loggedUser"))
@@ -94,6 +96,24 @@ export default function Navbar() {
                 </span>
               }
               key="/tasks"
+            />
+            <TabPane
+              icon={<Icon path={mdiGoogleAnalytics} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Аналитика
+                </span>
+              }
+              key="/analytics"
+            />
+            <TabPane
+              icon={<Icon path={mdiBallotOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Структура
+                </span>
+              }
+              key="/structure"
             />
           </>
         )}
