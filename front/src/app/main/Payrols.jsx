@@ -15,7 +15,9 @@ export default function Main() {
     const [data, setData] = useState([])
     const [contractSalary, setContractSalary] = useState(0)
     const [department, setDepartment] = useState("")
-    const [isData, setIsData] = useState(false)
+    const [isData, setIsData] = useState(false);
+    const [selectedMonthData, setSelectedMonthData] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(null);
 
     const [mode, setMode] = useState('calendar');
 
@@ -24,11 +26,16 @@ export default function Main() {
   };
 
   useEffect(() => {
+    if(mode === "payslip"){
     axios.get(`http://127.0.0.1:8090/api/collections/MonthData/records?filter=(user_id='${user.id}')`)
-      .then(response => {
-        setDate(monthes[new Date(response.data.items[0].date.substring(0,10)).getMonth()])
-        setData(response.data.items);
-        setIsData(true)
+      .then((response) => {
+          if(response?.data?.items?.length > 0){
+            console.log(response?.data?.items?.reverse()?.[0]?.params)
+            setDate(`${monthes[response?.data?.items?.reverse()?.[0]?.month]} ${response?.data?.items?.reverse()?.[0]?.year}`)
+            setData(response?.data?.items?.reverse());
+            setSelectedMonthData(response?.data?.items?.reverse()?.[0]?.params);
+            setSelectedYear(response?.data?.items?.reverse()?.[0]?.year);
+        }
       })
       .catch(error => {
         console.error(error);
@@ -51,7 +58,8 @@ export default function Main() {
             console.error(error);
           });
       }, 400);
-  }, [])
+    }
+  }, [mode])
 
     const generatePDF = () => {
         const input = document.getElementById('report');
@@ -59,24 +67,31 @@ export default function Main() {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF();
         pdf.addImage(imgData, 'JPEG', 0, 0);
-        pdf.save("Расчетный лист");
+        pdf.save(`${date} расчетный лист`);
       });
     }
 
     const dateOptions = data.map(item => {
-        return <option key={item.id}>{monthes[new Date(item.date.substring(0,10)).getMonth()]}</option>
+        return <option key={item.id}>{`${monthes[item?.month - 1]} ${item?.year}`}</option>
     });
 
     const getSalary = (arg) => {
       let result = 0
       data.map(item => {
-        if(monthes[new Date(item.date.substring(0,10)).getMonth()] === date){
+        if(monthes[item?.month-1] === date){
           arg === 1 ? result = item.salary : arg === 2 ? result = item.allowances : result = item.deductions
         }
       })
 
       return result;
     }
+
+    const onSelectMonth = (e) => {
+      const dateArr = e.target.value.split(" ")
+      setDate(e.target.value);
+      setSelectedMonthData(data?.filter(item => item?.month === monthes?.indexOf(dateArr[0])+1 && item?.year === parseInt(dateArr[1]))[0]?.params); 
+      setSelectedYear(dateArr[1]);           
+    };
 
     return (
       <>
@@ -88,11 +103,11 @@ export default function Main() {
       </Flex>
         {mode === "payslip" ?
         <div className='mainpage'>
-          {isData ? 
+          {selectedMonthData ? 
                 <div className="payslip">
   
                 <div className='month-options'>
-                    <select className="select-month" value={date} onChange = {(event) => setDate(event.target.value)}>
+                    <select className="select-month" value={date} onChange = {(event) => onSelectMonth(event)}>
 			                {dateOptions}
 		                </select>
                     <label className='select-month-label'>Месяц:</label>
@@ -100,15 +115,21 @@ export default function Main() {
 
                     <div id="report">
                         <h1 className="payslip-h">Расчетный лист</h1>
-                        <p className='payslip-field'>Организация: ОАО "Чпок и в гроб"</p>
+                        <p className='payslip-field'>Организация: ОАО "Название компании"</p>
                         <p className='payslip-field'>Подразделение: {department}</p>
                         <p className='payslip-field'>ФИО работника: {user.fio}</p>
-                        <p className='payslip-field'>Должность: {user.position === "worker" ? "Сотрудник" : "Руководитель отдела"}</p>
+                        <p className='payslip-field'>Должность: {user?.role || (user.position === "worker" ? "Сотрудник" : "Руководитель отдела")}</p>
                         <p className='payslip-field'>Оклад: {contractSalary}</p>
-                        <p className='payslip-field'>Выплата за месяц: {date}</p>
-                        <p className='payslip-field'>Размер выплаты: {getSalary(1)}</p>
-                        <p className='payslip-field'>Размер надбавок: {getSalary(2)}</p>
-                        <p className='payslip-field'>Размер удержаний: {getSalary(3)}</p>
+                        <p className='payslip-field'>Выплата за: {date}</p>
+                        <p className='payslip-field'>Основная часть зарплаты: {selectedMonthData?.salary}</p>
+                        <p className='payslip-field'>Надбавки: </p>
+                        {Object?.keys(selectedMonthData?.allowances)?.length === 0 ? <p className='payslip-field'>-</p> :
+                          Object?.keys(selectedMonthData?.allowances)?.map(item => {
+                            return (<p style={{marginLeft: '30px'}}>{`${item}: ${selectedMonthData?.allowances?.[item]}`}</p>)
+                          })
+                        }
+                        <p className='payslip-field'>Размер удержаний: {selectedMonthData?.deductions}</p>
+                        <p className='payslip-field'>Выплачено: {selectedMonthData?.totalSalary}</p>
                     </div>
 
             </div>
@@ -119,7 +140,7 @@ export default function Main() {
           }
             
             {
-              isData && <button className="save-payslip-btn" onClick={(e)=>{generatePDF()}}>Сохранить</button>
+              selectedMonthData && <button className="save-payslip-btn" onClick={(e)=>{generatePDF()}}>Сохранить</button>
             }
             
             {/* <Navbar/> */}

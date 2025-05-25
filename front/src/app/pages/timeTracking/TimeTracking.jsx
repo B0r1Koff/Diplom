@@ -123,7 +123,7 @@ const TimeTracker = () => {
   }, []);
 
   const dateCellRender = (date) => {
-    console.log(date?.day());
+    // console.log(date?.day());
     const monthReport = allReports?.filter(report => report?.month === date?.month()+1)[0];
     const dayReport = monthReport?.params?.[date?.date()]
     const isDayOff = date?.day() === 6 || date?.day() === 0

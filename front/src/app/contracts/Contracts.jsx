@@ -417,9 +417,10 @@ export default function ContractsPage() {
         <Radio.Button value="Contracts">Контракты</Radio.Button>
         <Radio.Button value="Payslip">Начисления</Radio.Button>
       </Radio.Group>
-      {mode !== "Contracts" && user?.position === "director" &&
         <Flex gap={'small'} style={{ position: 'absolute', top: '110px', left: '20px' }}>
+         {mode !== "Contracts" && user?.position === "director" &&
           <Button disabled={!isCalculationAllowed} type='primary' onClick={onCalculationButtonClick}>Рассчитать зарплаты сотрудников за прошедший месяц</Button>
+         }
           <Select
             value={selectedMonth}
             style={{ width: 120 }}
@@ -443,8 +444,6 @@ export default function ContractsPage() {
             ))}
           </Select>
         </Flex>
-      }
-
       <Table loading={isLoading} style={{ marginTop: mode === "Contracts" ? '100px' : '150px' }} dataSource={users} columns={mode === "Contracts" ? contractsColumns : accrualsColumns} rowKey="id" pagination={false} />
     </div>
   );
