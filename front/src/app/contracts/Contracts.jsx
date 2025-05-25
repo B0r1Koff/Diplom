@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { Table, Descriptions, Radio, Spin, Button, notification, Flex, Select } from "antd";
+import { Table, Descriptions, Radio, Spin, Button, notification, Flex, Select, Row, Avatar } from "antd";
 import { getPosition, getDepartment, getOverworkingAllowance, getExperienceAllowance, getSalary, getStartDate, getEndDate } from "../functions/functions";
 import Pocketbase from 'pocketbase';
+import Icon from '@mdi/react';
+import { mdiAccount, mdiAccountOutline } from '@mdi/js';
 
 export default function ContractsPage() {
   const pb = new Pocketbase('http://127.0.0.1:8090');
@@ -298,6 +300,15 @@ export default function ContractsPage() {
       title: 'ФИО',
       dataIndex: 'fio',
       key: 'fio',
+      render: (_, record) => (
+      <Row style={{alignItems: 'center'}}>
+        <Avatar
+          src={record?.photo ? `http://127.0.0.1:8090/api/files/users/${record.id}/${record.photo}` : null}
+          icon={!record?.photo ? <Icon path={mdiAccountOutline} size={1} /> : null}
+          style={{ marginRight: '8px' }}
+        />
+        {record?.fio}
+      </Row>)
     },
     {
       title: 'Должность',
@@ -352,6 +363,15 @@ export default function ContractsPage() {
       title: 'ФИО',
       dataIndex: 'fio',
       key: 'fio',
+      render: (_, record) => (
+      <Row style={{alignItems: 'center'}}>
+        <Avatar
+          src={record?.photo ? `http://127.0.0.1:8090/api/files/users/${record.id}/${record.photo}` : null}
+          icon={!record?.photo ? <Icon path={mdiAccountOutline} size={1} /> : null}
+          style={{ marginRight: '8px' }}
+        />
+        {record?.fio}
+      </Row>)
     },
     {
       title: 'Должность',

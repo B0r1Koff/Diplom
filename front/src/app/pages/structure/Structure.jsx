@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Tree, Card, Modal, Select, Button, message, Input } from 'antd';
+import { Tree, Card, Modal, Select, Button, message, Input, Avatar } from 'antd';
 import Pocketbase from 'pocketbase';
+import Icon from '@mdi/react';
+import { mdiAccountStar, mdiAccountOff, mdiAccount, mdiAccountOutline } from '@mdi/js';
 
 const { TreeNode } = Tree;
 
@@ -21,7 +23,7 @@ const EnterpriseStructure = () => {
 
   const fetchUsers = async () => {
     const records = await pb.collection('users').getFullList({
-        filter: `position != 'director'`
+      filter: `position != 'director'`
     });
     setUsers(records);
   };
@@ -49,7 +51,7 @@ const EnterpriseStructure = () => {
     message.success('Сотрудники успешно добавлены в отдел');
     setIsModalVisible(false);
     setSelectedUserIds([]);
-    await fetchUsers(); // Обновление данных пользователей
+    await fetchUsers();
   };
 
   const handleCreateDepartmentOk = async () => {
@@ -57,7 +59,7 @@ const EnterpriseStructure = () => {
     message.success('Отдел успешно создан');
     setIsCreateDepartmentModalVisible(false);
     setNewDepartmentName('');
-    await fetchDepartments(); // Обновление данных отделов
+    await fetchDepartments();
   };
 
   const handleCancel = () => {
@@ -86,7 +88,13 @@ const EnterpriseStructure = () => {
 
     await pb.collection('users').update(userId, { position: 'head' });
     message.success('Руководитель отдела успешно назначен');
-    await fetchUsers(); // Обновление данных пользователей
+    await fetchUsers();
+  };
+
+  const handleDetachUser = async (userId) => {
+    await pb.collection('users').update(userId, { department_id: null });
+    message.success('Сотрудник успешно откреплен от отдела');
+    await fetchUsers();
   };
 
   const renderTreeNodes = (data) => {
@@ -107,13 +115,25 @@ const EnterpriseStructure = () => {
           .map((user) => (
             <TreeNode
               title={
-                <div>
-                  {user.fio} ({user.position})
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Avatar
+                    src={user?.photo ? `http://127.0.0.1:8090/api/files/users/${user.id}/${user.photo}` : null}
+                    icon={!user?.photo ? <Icon path={mdiAccountOutline} size={1} /> : null}
+                    style={{ marginRight: '8px' }}
+                  />
+                  {user.fio} ({user?.role || (user?.position === "worker" ? "Сотрудник" : "Руководитель отдела")})
                   {user.position !== 'head' && (
-                    <Button type="link" onClick={() => handlePromoteToHead(user.id, department.id)}>
-                      Назначить руководителем
-                    </Button>
+                    <Button
+                      type="text"
+                      icon={<Icon path={mdiAccountStar} size={1} />}
+                      onClick={() => handlePromoteToHead(user.id, department.id)}
+                    />
                   )}
+                  <Button
+                    type="text"
+                    icon={<Icon path={mdiAccountOff} size={1} />}
+                    onClick={() => handleDetachUser(user.id)}
+                  />
                 </div>
               }
               key={user.id}
@@ -126,14 +146,21 @@ const EnterpriseStructure = () => {
   const availableUsers = users.filter((user) => !user.department_id);
 
   return (
-    <Card title="Структура предприятия" style={{ width: '100%', marginTop: '60px' }}>
+    <Card title="Структура компании" style={{ width: '100%', marginTop: '60px' }}>
       <Button type="primary" onClick={showCreateDepartmentModal} style={{ marginBottom: '20px' }}>
         Создать новый отдел
       </Button>
       <Tree showLine>{renderTreeNodes(departments)}</Tree>
       <Card title="Сотрудники без отдела" style={{ marginTop: '20px' }}>
         {availableUsers.map((user) => (
-          <div key={user.id}>{user.fio}</div>
+          <div key={user.id} style={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+                src={user?.photo ? `http://127.0.0.1:8090/api/files/users/${user.id}/${user.photo}` : null}
+                icon={!user?.photo ? <Icon path={mdiAccountOutline} size={1} /> : null}
+                style={{ marginRight: '8px' }}
+            />
+            {user.fio}
+          </div>
         ))}
       </Card>
       <Modal
@@ -141,16 +168,20 @@ const EnterpriseStructure = () => {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        okText="Добавить"
+        cancelText="Отмена"
       >
         <Select
           mode="multiple"
-          style={{ width: '100%' }}
+          style={{ width: '100%'}}
           placeholder="Выберите сотрудников"
           onChange={handleUserSelect}
         >
           {availableUsers.map((user) => (
             <Select.Option key={user.id} value={user.id}>
-              {user.fio}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {user.fio}
+              </div>
             </Select.Option>
           ))}
         </Select>
@@ -160,6 +191,8 @@ const EnterpriseStructure = () => {
         visible={isCreateDepartmentModalVisible}
         onOk={handleCreateDepartmentOk}
         onCancel={handleCreateDepartmentCancel}
+        okText="Создать"
+        cancelText="Отмена"
       >
         <Input
           placeholder="Название отдела"
