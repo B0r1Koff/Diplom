@@ -31,7 +31,7 @@ export default function Navbar() {
       "/tasks",
       "/timeTracking",
     ],
-    director: ["/contracts", "/createContract", "/tasks", "/timeTracking", "/analytics", "/structure"],
+    director: ["/contracts", "/createContract", "/tasks", "/timeTracking", "/analytics", "/structure", "/absenceNotice",],
   };
   const [loggedUser, setLoggedUser] = useState(
     JSON.parse(localStorage.getItem("loggedUser"))
@@ -87,6 +87,15 @@ export default function Navbar() {
                 </span>
               }
               key="/createContract"
+            />
+            <TabPane
+              icon={<Icon path={mdiCalendarRemoveOutline} size={1} />}
+              tab={
+                <span style={{ height: "100%", textAlign: 'center', alignItems: 'center' }}>
+                  Уведомления
+                </span>
+              }
+              key="/absenceNotice"
             />
             <TabPane
               icon={<Icon path={mdiClipboardCheckOutline} size={1} />}

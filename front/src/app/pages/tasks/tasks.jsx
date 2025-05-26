@@ -1,3 +1,4 @@
+ 
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, Select, Tag, notification, DatePicker, Progress, Upload } from 'antd';
 import { Container, Typography } from '@mui/material';
@@ -7,6 +8,7 @@ import PocketBase from 'pocketbase';
 import TaskInfoModal from './TaskInfoModal';
 import moment from 'moment';
 import { InboxOutlined } from '@ant-design/icons';
+import Pako from "pako";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -56,17 +58,17 @@ const TaskPage = () => {
         sort = '-status';
       }
 
-      if(currentUser?.position !== "worker"){
+      // if(currentUser?.position !== "worker"){
         const tasksResponse = await pb.collection('Tasks').getList(page, pageSize, {
           filter: filter,
           sort: sort,
         });
         setTasks(tasksResponse.items);
         setTotal(tasksResponse?.totalItems);
-      }else{
-        const tasksResponse = await axios.get(`http://127.0.0.1:8090/api/collections/Tasks/records?filter=(assigned_users~'${currentUser?.id}')`);
-        setTasks(tasksResponse.data.items);
-      }
+      // }else{
+      //   const tasksResponse = await axios.get(`http://127.0.0.1:8090/api/collections/Tasks/records?filter=(assigned_users~'${currentUser?.id}')`);
+      //   setTasks(tasksResponse.data.items);
+      // }
     };
 
   useEffect(() => {
@@ -89,13 +91,27 @@ const TaskPage = () => {
     setIsModalVisible(false);
   };
 
-  const onFinish = async (values) => {    
-    const data = {
-      ...values,
-      "status": "created",
-      "files": null
-    };
+  const compressFile = async (file) => {
+    const actualFile = file.originFileObj;
 
+    if (!actualFile) {
+      throw new Error('File object not found');
+    }
+
+    const arrayBuffer = await actualFile.arrayBuffer();
+    const compressed = Pako.gzip(new Uint8Array(arrayBuffer));
+
+    let compressedFile = '';
+    for (let i = 0; i < compressed.length; i++) {
+      compressedFile += String.fromCharCode(compressed[i]);
+    }
+    compressedFile = btoa(compressedFile);
+
+    return { data: compressedFile, name: actualFile.name, type: actualFile.type };
+  };
+
+
+  const createTask = (data) => {
     const record = pb.collection('Tasks').create(data);
 
     record?.then(() => {
@@ -114,6 +130,31 @@ const TaskPage = () => {
     setIsModalVisible(false);
     form.resetFields();
     setFileList([]);
+  };
+
+  const onFinish = async (values) => {
+    const data = {
+      ...values,
+      "files": null,
+      "process_files": null,
+    "result_files": null,
+    "process_description": "",
+    "result_description": "",
+      "status": "created",
+    };
+
+    if (fileList?.length > 0) {
+        Promise.all(fileList?.map(compressFile)).then((compressedFiles) => {
+          data.files = compressedFiles;
+          console.log(compressedFiles);
+          createTask(data);
+        }).catch((error) => {
+          console.error('Error compressing files:', error);
+          createTask(data);
+        });
+      } else {
+        createTask(data);
+      }
   };
 
   const filterTasks = (userId) => {
@@ -149,7 +190,7 @@ const TaskPage = () => {
         const resultList = await pb.collection('KPI').getList(1, 1, {
           filter: `user_id = '${userId}' && month = '${month}' && year = ${year}`,
         });
-        
+
         if(resultList?.items?.length === 0){
           const data = {
             "month": month,
@@ -214,15 +255,25 @@ const TaskPage = () => {
     setSelectedTask(null);
   };
 
-  const calculateProgress = (startDate, endDate) => {
-    const today = moment();
-    const start = moment(startDate);
-    const end = moment(endDate);
-    const totalDuration = end.diff(start, 'days');
-    const elapsedDuration = today.diff(start, 'days');
-    const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
-    return parseInt(progress);
-  };
+  const calculateProgress = (startDate, endDate, status) => {
+  const today = moment();
+  const start = moment(startDate);
+  const end = moment(endDate);
+  const totalDuration = end.diff(start, 'days');
+  const elapsedDuration = today.diff(start, 'days');
+
+  if (status === 'completed') {
+    return { percent: 100, isOverdue: false, daysOverdue: 0 };
+  }
+
+  if (today.isAfter(end)) {
+    const daysOverdue = today.diff(end, 'days');
+    return { percent: 100, isOverdue: true, daysOverdue };
+  }
+
+  const progress = Math.min((elapsedDuration / totalDuration) * 100, 100);
+  return { percent: parseInt(progress), isOverdue: false, daysOverdue: 0 };
+};
 
   const columns = [
     {
@@ -249,9 +300,9 @@ const TaskPage = () => {
                     <Option value="in progress"><Tag color='orange'>Выполняется</Tag></Option>
                     <Option value="ready for review"><Tag color='purple'>Готова к проверке</Tag></Option>
                     <Option value="reopened"><Tag color='magenta'>Отправлена на доработку</Tag></Option>
-                    {/* {!record?.assigned_users?.includes(currentUser?.id) && */}
+                    {!record?.assigned_users?.includes(currentUser?.id) &&
                       <Option value="completed"><Tag color='green'>Выполнена</Tag></Option>
-                    {/* } */}
+                    }
                 </Select>
                 :
                 <Tag color='green'>Выполнена</Tag>
@@ -294,17 +345,27 @@ const TaskPage = () => {
         </span>
       ),
     },
-    {
-      title: 'Прогресс',
-      key: 'progress',
-      render: (_, record) => (
+   {
+  title: 'Прогресс',
+  key: 'progress',
+  render: (_, record) => {
+    const { percent, isOverdue, daysOverdue } = calculateProgress(record.date_of_start, record.date_of_finish, record.status);
+
+    const progressText = isOverdue ? `${daysOverdue}` : percent === 100 ? '✓' : `${percent}%`;
+
+    return (
+      <div>
         <Progress
           type="circle"
-          percent={calculateProgress(record.date_of_start, record.date_of_finish)}
+          percent={percent}
           width={50}
+          strokeColor={isOverdue ? '#ff4d4f' : percent === 100 ? '#52c41a' : '#1890ff'}
+          format={() => <div style={{color: isOverdue ? '#ff4d4f' : percent === 100 ? '#52c41a' : '#1890ff'}}>{progressText}</div>}
         />
-      ),
-    },
+      </div>
+    );
+  },
+},
     {
         title: 'Действия',
         key: 'actions',
@@ -315,14 +376,6 @@ const TaskPage = () => {
         ),
       },
   ];
-
-  const editTask = (task) => {
-    // Реализуйте логику редактирования задачи
-  };
-
-  const updateStatus = (task) => {
-    // Реализуйте логику обновления статуса задачи
-  };
 
    const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -456,19 +509,15 @@ const TaskPage = () => {
           </Form.Item>
           <Form.Item label="Upload Files">
             <Dragger
+              style={{width: '100px', display: 'flex', alignItems: 'center'}}
               fileList={fileList}
               onChange={onChange}
               onPreview={onPreview}
               beforeUpload={() => false} // Prevent automatic upload
+              multiple
+              height={30}
             >
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-                banned files.
-              </p>
+              <InboxOutlined size={1}/>
             </Dragger>
           </Form.Item>
         </Form>
@@ -480,6 +529,7 @@ const TaskPage = () => {
           onCancel={handleInfoCancel}
           task={selectedTask}
           users={users}
+          onUpdateTask={fetchData}
         />
       )}
     </Container>

@@ -54,7 +54,6 @@ const Profile = ({ isOpen, onClose }) => {
 
   const handleAddPhoto = (event) => {
     setPhoto(event.target.files[0]);
-    console.log(photo);
   };
 
   const handleSubmitClick = () => {

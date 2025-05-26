@@ -176,7 +176,7 @@ export default function ContractsPage() {
           });
 
           if (noticeForDay) {
-            if (noticeForDay.type !== "Оплачиваемый отпуск") {
+            if (noticeForDay.type !== "Не оплачиваемый отпуск") {
               totalHoursWorked += 8;
             } else {
               totalHoursWorked += 0;

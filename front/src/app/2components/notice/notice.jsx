@@ -18,7 +18,7 @@ export default function Notice({noticeData, setNoticeData}){
       });
   }, [])
 
-    const typesOfAbsence = ["Отпуск", "Больничный", "Оплачиваемый отпуск", "Прогул"]
+    const typesOfAbsence = ["Отпуск", "Больничный", "Не оплачиваемый отпуск", "Отгул"]
 
     const handleNoticeDataChange = (e) => {
         let { name, value } = e.target;
